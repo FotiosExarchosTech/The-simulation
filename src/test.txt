@@ -1,0 +1,66 @@
+#include "raylib.h"
+
+#include "creator_movement.h"
+#include <rlgl.h>
+
+namespace
+{ const int window_width  = 1280;
+    const int window_height = 720;
+
+    const float camera_field_of_view_degrees = 60.0f;
+   
+}
+
+int main()
+{
+    /*float grid_y_1 = 1.0f;
+    float grid_y_2 = 0.0f;
+    float grid_y_3 = 1.0f;  */
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    InitWindow(window_width, window_height, "The simulation !");
+    SetTargetFPS(60);
+
+    Creator_Movement creator({ 0.0f, 3.0f, 3.0f }, 0.0f, -45.0f * DEG2RAD);
+    creator.SetMouseLook(true);
+
+    Camera3D camera{};
+    camera.fovy = camera_field_of_view_degrees;
+    camera.projection = CAMERA_PERSPECTIVE;
+
+    while (!WindowShouldClose())
+    {
+        // Seconds elapsed since the previous frame. Every movement is scaled by
+        // this so the speed stays the same whatever the frame rate.
+        const float delta_seconds = GetFrameTime();
+
+        if (IsKeyPressed(KEY_TAB)) creator.ToggleMouseLook();
+
+        camera.target = Vector3(0, 0, 0);
+
+        creator.Update(delta_seconds);
+        creator.ApplyTo(camera);
+
+        BeginDrawing();
+            ClearBackground(RAYWHITE);
+
+            BeginMode3D(camera);
+            DrawGrid(20, 1.0f);
+            //DrawTriangle3D(Vector3(0, 0, 0), Vector3(0, 0, -1), Vector3(-1, 0, 0), BLUE);
+            rlBegin(RL_QUADS);
+                rlColor4ub(0, 0, 255, 255);
+                rlVertex3f(-2.5f, 0.0f, -2.5f);
+                rlVertex3f(-2.5f, 0.0f,  2.5f);
+                rlVertex3f( 2.5f, 0.0f,  2.5f);
+                rlVertex3f( 2.5f, 5.0f, -2.5f);
+            rlEnd();
+            EndMode3D();
+
+            DrawText("WASD / arrows: move    SPACE / CTRL: up / down    SHIFT: boost", 20, 20, 18, GRAY);
+            DrawText("mouse: look    TAB: release mouse    ESC: quit", 20, 44, 18, GRAY);
+            DrawFPS(window_width - 100, 20);
+        EndDrawing();
+    }
+
+    CloseWindow();
+    return 0;
+}

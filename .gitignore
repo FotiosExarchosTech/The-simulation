@@ -1,0 +1,21 @@
+# Build output
+build/
+out/
+cmake-build-*/
+*.exe
+*.pdb
+*.ilk
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+_deps/
+
+# Editor / OS
+.cache/
+.vs/
+*.user
+Thumbs.db
+desktop.ini

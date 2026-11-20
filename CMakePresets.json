@@ -1,0 +1,39 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Ninja + MinGW-w64 (raylib from source)",
+      "description": "Builds raylib from source as a static lib; simulation.exe is self-contained.",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "SIM_USE_SYSTEM_RAYLIB": "OFF"
+      }
+    },
+    {
+      "name": "debug",
+      "inherits": "default",
+      "displayName": "Debug",
+      "binaryDir": "${sourceDir}/build/debug",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" }
+    },
+    {
+      "name": "system-raylib",
+      "inherits": "default",
+      "displayName": "Ninja + MinGW-w64 (toolchain raylib)",
+      "description": "Links the raylib installed by pacman. Configures fast; needs mingw64/bin on PATH at runtime.",
+      "binaryDir": "${sourceDir}/build/system",
+      "cacheVariables": { "SIM_USE_SYSTEM_RAYLIB": "ON" }
+    }
+  ],
+  "buildPresets": [
+    { "name": "default", "configurePreset": "default" },
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "system-raylib", "configurePreset": "system-raylib" }
+  ]
+}
